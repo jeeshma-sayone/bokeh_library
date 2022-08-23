@@ -1,0 +1,1 @@
+Python Bokeh is a Data Visualization library that provides interactive charts and plots. Unlike Matplotlib and Seaborn, Bokeh renders its plots using HTML and JavaScript. 
