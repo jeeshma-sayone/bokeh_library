@@ -2,7 +2,7 @@
 from bokeh.plotting import figure, output_file, show
 
 # instantiating the figure object
-graph = figure(title="Bokeh Line Graph")
+graph = figure(title="Customizing Legends Graph")
 
 # the points to be plotted
 x = [1, 2, 3, 4, 5]

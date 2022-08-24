@@ -127,11 +127,4 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-/annotations_legends.html
-/automatically_grouped.html
-/customizing_legends.html
-/interactive_legends.html
-/simple_plot.html
-/line_eg.html
-/multi_line.html
 *.html
