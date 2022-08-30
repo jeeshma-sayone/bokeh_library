@@ -1,54 +1,75 @@
-from bokeh.io import show
-from bokeh.layouts import column
-from bokeh.models import Button, CustomJS, CheckboxGroup, RadioGroup, Slider, Dropdown
+# Import the following modules
+import datetime as datetime
+from dateutil.relativedelta import relativedelta
+from datetime import datetime
+from time import strptime
+from pywebio.input import *
+from pywebio.output import *
+from pywebio.session import *
+import time
 
-# Button
-button = Button(label="BUTTON")
-button.js_on_click(CustomJS(
-    code="console.log('button: click!', this.toString())"))
-# ----------- Button End -----------
+# Run infinite loop
+while True:
+    clear()
 
-# Checkbox
-L = ["First", "Second", "Third"]
+    # Put a heading Age Calculator
+    put_html("<p align=""left""><h4> AGE CALCULATOR</h4></p>")
 
-# the active parameter sets checks the selected value
-# by default
-checkbox_group = CheckboxGroup(labels=L, active=[0, 2])
-checkbox_group.js_on_click(CustomJS(code="""
-    console.log('checkbox_group: active=' + this.active, this.toString())
-"""))
-# ----------- Checkbox End -----------
+    # Getting Current time.
+    date = datetime.now().strftime("%d/%m/%Y")
 
-# RadioGroup
-# the active parameter sets checks the selected value
-# by default
-radio_group = RadioGroup(labels=L, active=1)
+    # Taking age from the user
+    DOB = input("", placeholder="Your Birth Date(dd/mm/yyyy)")
+    try:
 
-radio_group.js_on_click(CustomJS(code="""
-    console.log('radio_group: active=' + this.active, this.toString())
-"""))
-# ----------- RadioGroup End -----------
+        # Check whether the input age
+        # format is same as given format
+        val = strptime(DOB, "%d/%m/%Y")
+    except:
 
-# Slider
-slider = Slider(start=1, end=20, value=1, step=2, title="Slider")
+        # If format is different, then through an error.
+        put_error("Alert! This is not the right format")
 
-slider.js_on_change("value", CustomJS(code="""
-    console.log('slider: value=' + this.value, this.toString())
-"""))
-# ----------- Slider End ---------
+        # sleep for 3 seconds
+        time.sleep(3)
+        continue
+    in_date = DOB.split('/')
+    date = date.split('/')
 
-# Dropdown
-menu = [("First", "First"), ("Second", "Second"), ("Third", "Third")]
+    # Typecast all the converted part into the int.
+    in_date = [int(i) for i in in_date]
+    date = [int(i) for i in date]
 
-dropdown = Dropdown(label="Dropdown Menu", button_type="success", menu=menu)
+    # Define an empty list
+    newdate = []
 
-dropdown.js_on_event("menu_item_click", CustomJS(
-    code="console.log('dropdown: ' + this.item, this.toString())"))
-# ----------- Dropdown End ---------
+    # Swap days with years
+    in_date[0], in_date[2] = in_date[2], in_date[0]
 
-# put all the plots in a VBox
-screen = column(button, checkbox_group, radio_group, slider, dropdown,)
+    # Swap days with years
+    date[0], date[2] = date[2], date[0]
+    if in_date <= date:
+        now = datetime.strptime(DOB, "%d/%m/%Y")
 
-# show the results
+        # Display output
+        popup("Your Age", [put_html(
+            "<h4>"f"{relativedelta(datetime.now(), now).years} Years</br> {relativedelta(datetime.now(), now).months} Months</br>{relativedelta(datetime.now(), now).days} Days""</h4>"),
+            put_buttons(['Close'], onclick=lambda _: close_popup())], implicit_close=True)
+    else:
 
-show(screen)
+        # If you input the year greater than current year
+        put_warning(
+            f"No result found, this is {date[0]}, and you can't be in {in_date[0]}.")
+        time.sleep(3)
+    clear()
+    # Give user a choice
+    choice = radio("Do you want to calculate again?",
+                   options=['Yes', 'No'], required=True)
+    if choice.lower() == 'yes':
+        continue
+    else:
+        clear()
+
+        # Show a toast notification
+        toast("Thanks a lot!")
+        exit()
